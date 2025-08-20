@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRA管理系统 - 企业级解决方案</title>
+    <title>CRA管理系统 - 可编辑版</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -24,7 +24,6 @@
             text-align: center;
             color: #667eea;
             margin-bottom: 30px;
-            font-size: 2.5em;
         }
         .nav {
             display: flex;
@@ -41,37 +40,18 @@
             border-radius: 25px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
         }
-        .nav button:hover, .nav button.active {
+        .nav button.active {
             background: #667eea;
             color: white;
         }
         .section { display: none; }
         .section.active { display: block; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
         .card {
             background: #f8f9ff;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        .stat {
-            font-size: 2.5em;
-            color: #667eea;
-            font-weight: bold;
-            margin: 10px 0;
+            margin: 20px 0;
         }
         table {
             width: 100%;
@@ -88,30 +68,6 @@
             padding: 10px;
             border-bottom: 1px solid #e0e0e0;
         }
-        tr:hover { background: #f5f5f5; }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: bold;
-        }
-        .badge-success { background: #d4f4dd; color: #28a745; }
-        .badge-warning { background: #fff3cd; color: #ffc107; }
-        .badge-danger { background: #f8d7da; color: #dc3545; }
-        .progress {
-            width: 100%;
-            height: 20px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.5s;
-        }
         .btn {
             padding: 10px 20px;
             background: #667eea;
@@ -120,287 +76,467 @@
             border-radius: 20px;
             cursor: pointer;
             margin: 5px;
-            transition: 0.3s;
         }
         .btn:hover {
             background: #764ba2;
-            transform: translateY(-2px);
         }
-        .workflow {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin: 30px 0;
-            flex-wrap: wrap;
+        .btn-danger {
+            background: #dc3545;
         }
-        .step {
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-            margin: 10px;
+        .btn-success {
+            background: #28a745;
         }
-        .step-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 10px;
-            background: #667eea;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 15px;
+        }
+        .close {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        .close:hover {
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+        .alert {
+            padding: 15px;
+            background: #d4f4dd;
+            color: #28a745;
+            border-radius: 10px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏥 CRA管理系统</h1>
+        <h1>🏥 CRA管理系统（本地存储版）</h1>
         
         <div class="nav">
-            <button class="active" onclick="showSection('dashboard')">📊 总览</button>
-            <button onclick="showSection('team')">👥 团队</button>
-            <button onclick="showSection('project')">📋 项目</button>
-            <button onclick="showSection('training')">🎓 培训</button>
-            <button onclick="showSection('kpi')">📈 绩效</button>
-            <button onclick="showSection('quality')">✅ 质量</button>
-        </div>
-
-        <!-- 总览 -->
-        <div id="dashboard" class="section active">
-            <div class="grid">
-                <div class="card">
-                    <h3>CRA团队</h3>
-                    <div class="stat">48</div>
-                    <p>在职CRA</p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 85%"></div>
-                    </div>
-                    <small>利用率: 85%</small>
-                </div>
-                <div class="card">
-                    <h3>活跃项目</h3>
-                    <div class="stat">15</div>
-                    <p>进行中试验</p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 72%"></div>
-                    </div>
-                    <small>平均进度: 72%</small>
-                </div>
-                <div class="card">
-                    <h3>监查中心</h3>
-                    <div class="stat">126</div>
-                    <p>合作医院</p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 92%"></div>
-                    </div>
-                    <small>覆盖率: 92%</small>
-                </div>
-            </div>
+            <button class="active" onclick="showSection('team')">👥 团队管理</button>
+            <button onclick="showSection('project')">📋 项目管理</button>
+            <button onclick="showSection('export')">💾 数据导出</button>
         </div>
 
         <!-- 团队管理 -->
-        <div id="team" class="section">
+        <div id="team" class="section active">
             <div class="card">
                 <h3>CRA团队列表</h3>
-                <table>
+                <button class="btn btn-success" onclick="openAddModal()">+ 添加新CRA</button>
+                <button class="btn" onclick="exportData()">📥 导出数据</button>
+                <button class="btn" onclick="importData()">📤 导入数据</button>
+                
+                <table id="craTable">
                     <thead>
                         <tr>
                             <th>姓名</th>
                             <th>级别</th>
-                            <th>负责中心</th>
-                            <th>当前项目</th>
-                            <th>状态</th>
+                            <th>负责中心数</th>
+                            <th>电话</th>
+                            <th>邮箱</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>张晓明</td>
-                            <td>Senior CRA</td>
-                            <td>12</td>
-                            <td>ABC-2024-001</td>
-                            <td><span class="badge badge-success">活跃</span></td>
-                        </tr>
-                        <tr>
-                            <td>李婷婷</td>
-                            <td>CRA II</td>
-                            <td>8</td>
-                            <td>XYZ-2024-003</td>
-                            <td><span class="badge badge-success">活跃</span></td>
-                        </tr>
-                        <tr>
-                            <td>王强</td>
-                            <td>CRA I</td>
-                            <td>5</td>
-                            <td>培训中</td>
-                            <td><span class="badge badge-warning">培训</span></td>
-                        </tr>
-                        <tr>
-                            <td>刘梅</td>
-                            <td>Senior CRA</td>
-                            <td>10</td>
-                            <td>DEF-2024-002</td>
-                            <td><span class="badge badge-success">活跃</span></td>
-                        </tr>
+                    <tbody id="craTableBody">
+                        <!-- 动态生成 -->
                     </tbody>
                 </table>
-                <button class="btn">+ 添加新CRA</button>
-                <button class="btn">导出名单</button>
             </div>
         </div>
 
         <!-- 项目管理 -->
         <div id="project" class="section">
             <div class="card">
-                <h3>项目进度看板</h3>
-                <div class="workflow">
-                    <div class="step">
-                        <div class="step-icon">📝</div>
-                        <strong>启动准备</strong>
-                        <p>3个项目</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-icon">🏃</div>
-                        <strong>入组阶段</strong>
-                        <p>8个项目</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-icon">📊</div>
-                        <strong>随访阶段</strong>
-                        <p>4个项目</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-icon">✅</div>
-                        <strong>关闭阶段</strong>
-                        <p>2个项目</p>
-                    </div>
-                </div>
-            </div>
-            <div class="grid">
-                <div class="card">
-                    <h3>本周监查计划</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li>✓ 周一: 北京协和医院 - 张晓明</li>
-                        <li>✓ 周二: 上海瑞金医院 - 李婷婷</li>
-                        <li>⏳ 周三: 广州中山医院 - 刘梅</li>
-                        <li>⏳ 周四: 武汉同济医院 - 王强</li>
-                        <li>⏳ 周五: 成都华西医院 - 张晓明</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>项目风险提醒</h3>
-                    <p>🔴 <strong>ABC-2024-001</strong>: 入组进度落后20%</p>
-                    <p>🟡 <strong>XYZ-2024-003</strong>: 2个中心待伦理批准</p>
-                    <p>🟢 <strong>DEF-2024-002</strong>: 运行正常</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 培训体系 -->
-        <div id="training" class="section">
-            <div class="card">
-                <h3>培训计划</h3>
-                <table>
+                <h3>项目列表</h3>
+                <button class="btn btn-success" onclick="openProjectModal()">+ 添加新项目</button>
+                
+                <table id="projectTable">
                     <thead>
                         <tr>
-                            <th>培训主题</th>
-                            <th>类型</th>
-                            <th>时间</th>
-                            <th>讲师</th>
+                            <th>项目编号</th>
+                            <th>项目名称</th>
+                            <th>负责CRA</th>
                             <th>状态</th>
+                            <th>开始日期</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>GCP法规更新</td>
-                            <td>必修</td>
-                            <td>2024-03-15</td>
-                            <td>外部专家</td>
-                            <td><span class="badge badge-success">已完成</span></td>
-                        </tr>
-                        <tr>
-                            <td>EDC系统操作</td>
-                            <td>必修</td>
-                            <td>2024-03-20</td>
-                            <td>IT部门</td>
-                            <td><span class="badge badge-warning">进行中</span></td>
-                        </tr>
-                        <tr>
-                            <td>肿瘤领域知识</td>
-                            <td>选修</td>
-                            <td>2024-03-25</td>
-                            <td>医学部</td>
-                            <td><span class="badge badge-danger">待开始</span></td>
-                        </tr>
+                    <tbody id="projectTableBody">
+                        <!-- 动态生成 -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 绩效管理 -->
-        <div id="kpi" class="section">
+        <!-- 数据导出 -->
+        <div id="export" class="section">
             <div class="card">
-                <h3>团队KPI达成情况</h3>
-                <div style="margin: 20px 0;">
-                    <p><strong>监查报告及时率</strong></p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 95%"></div>
-                    </div>
-                    <small>95% (目标: 90%)</small>
+                <h3>数据管理</h3>
+                <div class="alert">
+                    💡 所有数据保存在浏览器本地，清除浏览器缓存会丢失数据。建议定期导出备份。
                 </div>
-                <div style="margin: 20px 0;">
-                    <p><strong>数据质量评分</strong></p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 88%"></div>
-                    </div>
-                    <small>4.4/5.0 (目标: 4.0)</small>
-                </div>
-                <div style="margin: 20px 0;">
-                    <p><strong>中心满意度</strong></p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 92%"></div>
-                    </div>
-                    <small>4.6/5.0 (目标: 4.0)</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- 质量控制 -->
-        <div id="quality" class="section">
-            <div class="grid">
-                <div class="card">
-                    <h3>质量检查结果</h3>
-                    <p>✅ 本月完成检查: <strong>15次</strong></p>
-                    <p>⚠️ 发现问题: <strong>3个</strong></p>
-                    <p>✓ 已解决: <strong>2个</strong></p>
-                    <p>⏳ 处理中: <strong>1个</strong></p>
-                </div>
-                <div class="card">
-                    <h3>CAPA追踪</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li>📋 CAPA-2024-001: 数据录入延迟 [已关闭]</li>
-                        <li>📋 CAPA-2024-002: 知情同意流程 [执行中]</li>
-                        <li>📋 CAPA-2024-003: 样本管理改进 [计划中]</li>
-                    </ul>
-                </div>
+                
+                <button class="btn btn-success" onclick="exportAllData()">
+                    📥 导出所有数据为JSON文件
+                </button>
+                
+                <button class="btn" onclick="exportToExcel()">
+                    📊 导出为Excel格式
+                </button>
+                
+                <button class="btn" onclick="printReport()">
+                    🖨️ 打印报表
+                </button>
+                
+                <hr style="margin: 20px 0;">
+                
+                <h4>导入数据</h4>
+                <input type="file" id="fileInput" accept=".json">
+                <button class="btn" onclick="importFromFile()">导入JSON文件</button>
+                
+                <hr style="margin: 20px 0;">
+                
+                <h4>数据统计</h4>
+                <p>CRA总数：<span id="craCount">0</span></p>
+                <p>项目总数：<span id="projectCount">0</span></p>
+                <p>最后更新：<span id="lastUpdate">-</span></p>
             </div>
         </div>
     </div>
 
+    <!-- 添加CRA模态框 -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>添加新CRA</h2>
+            <form id="craForm">
+                <div class="form-group">
+                    <label>姓名：</label>
+                    <input type="text" id="craName" required>
+                </div>
+                <div class="form-group">
+                    <label>级别：</label>
+                    <select id="craLevel">
+                        <option>Junior CRA</option>
+                        <option>CRA I</option>
+                        <option>CRA II</option>
+                        <option>Senior CRA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>负责中心数：</label>
+                    <input type="number" id="craCenters" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>电话：</label>
+                    <input type="tel" id="craPhone">
+                </div>
+                <div class="form-group">
+                    <label>邮箱：</label>
+                    <input type="email" id="craEmail">
+                </div>
+                <button type="button" class="btn btn-success" onclick="saveCRA()">保存</button>
+                <button type="button" class="btn" onclick="closeModal()">取消</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加项目模态框 -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProjectModal()">&times;</span>
+            <h2>添加新项目</h2>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label>项目编号：</label>
+                    <input type="text" id="projectCode" required>
+                </div>
+                <div class="form-group">
+                    <label>项目名称：</label>
+                    <input type="text" id="projectName" required>
+                </div>
+                <div class="form-group">
+                    <label>负责CRA：</label>
+                    <select id="projectCRA">
+                        <!-- 动态生成 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>状态：</label>
+                    <select id="projectStatus">
+                        <option>准备中</option>
+                        <option>进行中</option>
+                        <option>已完成</option>
+                        <option>暂停</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>开始日期：</label>
+                    <input type="date" id="projectDate">
+                </div>
+                <button type="button" class="btn btn-success" onclick="saveProject()">保存</button>
+                <button type="button" class="btn" onclick="closeProjectModal()">取消</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // 初始化数据存储
+        let craData = JSON.parse(localStorage.getItem('craData')) || [];
+        let projectData = JSON.parse(localStorage.getItem('projectData')) || [];
+
+        // 页面加载时初始化
+        window.onload = function() {
+            loadCRATable();
+            loadProjectTable();
+            updateStats();
+        };
+
+        // 显示不同部分
         function showSection(id) {
-            // 隐藏所有section
             const sections = document.querySelectorAll('.section');
             sections.forEach(s => s.classList.remove('active'));
-            
-            // 显示选中的section
             document.getElementById(id).classList.add('active');
             
-            // 更新按钮状态
             const buttons = document.querySelectorAll('.nav button');
             buttons.forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
         }
+
+        // 打开添加CRA模态框
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'block';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('addModal').style.display = 'none';
+            document.getElementById('craForm').reset();
+        }
+
+        // 保存CRA
+        function saveCRA() {
+            const cra = {
+                id: Date.now(),
+                name: document.getElementById('craName').value,
+                level: document.getElementById('craLevel').value,
+                centers: document.getElementById('craCenters').value,
+                phone: document.getElementById('craPhone').value,
+                email: document.getElementById('craEmail').value
+            };
+            
+            craData.push(cra);
+            localStorage.setItem('craData', JSON.stringify(craData));
+            localStorage.setItem('lastUpdate', new Date().toLocaleString());
+            
+            loadCRATable();
+            updateStats();
+            closeModal();
+            alert('CRA添加成功！');
+        }
+
+        // 加载CRA表格
+        function loadCRATable() {
+            const tbody = document.getElementById('craTableBody');
+            tbody.innerHTML = '';
+            
+            craData.forEach(cra => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${cra.name}</td>
+                    <td>${cra.level}</td>
+                    <td>${cra.centers}</td>
+                    <td>${cra.phone}</td>
+                    <td>${cra.email}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteCRA(${cra.id})">删除</button>
+                    </td>
+                `;
+            });
+        }
+
+        // 删除CRA
+        function deleteCRA(id) {
+            if(confirm('确定要删除吗？')) {
+                craData = craData.filter(cra => cra.id !== id);
+                localStorage.setItem('craData', JSON.stringify(craData));
+                loadCRATable();
+                updateStats();
+            }
+        }
+
+        // 项目管理功能
+        function openProjectModal() {
+            // 更新CRA选择列表
+            const select = document.getElementById('projectCRA');
+            select.innerHTML = '<option>未分配</option>';
+            craData.forEach(cra => {
+                select.innerHTML += `<option>${cra.name}</option>`;
+            });
+            document.getElementById('projectModal').style.display = 'block';
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').style.display = 'none';
+            document.getElementById('projectForm').reset();
+        }
+
+        function saveProject() {
+            const project = {
+                id: Date.now(),
+                code: document.getElementById('projectCode').value,
+                name: document.getElementById('projectName').value,
+                cra: document.getElementById('projectCRA').value,
+                status: document.getElementById('projectStatus').value,
+                date: document.getElementById('projectDate').value
+            };
+            
+            projectData.push(project);
+            localStorage.setItem('projectData', JSON.stringify(projectData));
+            
+            loadProjectTable();
+            updateStats();
+            closeProjectModal();
+            alert('项目添加成功！');
+        }
+
+        function loadProjectTable() {
+            const tbody = document.getElementById('projectTableBody');
+            tbody.innerHTML = '';
+            
+            projectData.forEach(project => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${project.code}</td>
+                    <td>${project.name}</td>
+                    <td>${project.cra}</td>
+                    <td>${project.status}</td>
+                    <td>${project.date}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteProject(${project.id})">删除</button>
+                    </td>
+                `;
+            });
+        }
+
+        function deleteProject(id) {
+            if(confirm('确定要删除吗？')) {
+                projectData = projectData.filter(p => p.id !== id);
+                localStorage.setItem('projectData', JSON.stringify(projectData));
+                loadProjectTable();
+                updateStats();
+            }
+        }
+
+        // 导出功能
+        function exportAllData() {
+            const data = {
+                craData: craData,
+                projectData: projectData,
+                exportDate: new Date().toLocaleString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `CRA_Data_${new Date().getTime()}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // 导出为Excel（CSV格式）
+        function exportToExcel() {
+            let csv = 'CRA数据\n';
+            csv += '姓名,级别,负责中心数,电话,邮箱\n';
+            craData.forEach(cra => {
+                csv += `${cra.name},${cra.level},${cra.centers},${cra.phone},${cra.email}\n`;
+            });
+            
+            csv += '\n项目数据\n';
+            csv += '项目编号,项目名称,负责CRA,状态,开始日期\n';
+            projectData.forEach(project => {
+                csv += `${project.code},${project.name},${project.cra},${project.status},${project.date}\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `CRA_Report_${new Date().getTime()}.csv`;
+            link.click();
+        }
+
+        // 导入数据
+        function importFromFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        craData = data.craData || [];
+                        projectData = data.projectData || [];
+                        
+                        localStorage.setItem('craData', JSON.stringify(craData));
+                        localStorage.setItem('projectData', JSON.stringify(projectData));
+                        
+                        loadCRATable();
+                        loadProjectTable();
+                        updateStats();
+                        
+                        alert('数据导入成功！');
+                    } catch (error) {
+                        alert('导入失败，请检查文件格式');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // 更新统计
+        function updateStats() {
+            document.getElementById('craCount').textContent = craData.length;
+            document.getElementById('projectCount').textContent = projectData.length;
+            document.getElementById('lastUpdate').textContent = localStorage.getItem('lastUpdate') || '从未';
+        }
+
+        // 打印功能
+        function printReport() {
+            window.print();
+        }
     </script>
 </body>
 </html>
+
